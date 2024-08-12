@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>ECG interpretation page</title>
+	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+	<style>
+		body {
+			text-align: center;
+			margin-top: 100px;
+			margin-bottom: 50px;
+			background: #fff;
+			font-family: 'Noto Sans KR', sans-serif;
+			font-weight: 700;
+		}
+
+		button {
+			width: 95%;
+			height: 60px;
+			display: block;
+			margin: auto;
+			margin-bottom: 10px;
+			font-size: 12pt;
+			background-color: #eef1f4;
+			border-radius: 20px;
+			border: 0;
+			outline: 0;
+			font-family: 'Noto Sans KR', sans-serif;
+		}
+
+		.selected {
+			transition: background-color 0.3s ease;
+			background-color: lightskyblue;
+		}
+
+		#divresult {
+			top: 0;
+			left: 0;
+			right: 0;
+			font-size: 24pt;
+			text-align: center;
+			position: fixed;
+			background-color: #53688A;
+			color: white;
+			overflow: hidden;
+			font-family: 'Noto Sans KR', sans-serif;
+		}
+
+		p {
+			font-size: 20pt;
+			font-family: 'Noto Sans KR', sans-serif;
+		}
+	</style>
+	<script>
+		function highlightBtn(button, question) {
+			var buttons = document.querySelectorAll('button');
+			for (var i = 0; i < buttons.length; i++) {
+				if (buttons[i].getAttribute('onclick').includes(question)) {
+					buttons[i].classList.remove('selected');
+				}
+			}
+			button.classList.add('selected');
+		}
+
+		function showContent(selectedOption) {//start
+			var contentElement = document.getElementById('content1');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>RR interval regularity</p>\
+				<button onclick="highlightBtn(this, \'btn2\');showContent1(\'select1\')">regular</button>\
+				<button onclick="highlightBtn(this, \'btn2\');showContent1(\'select2\')">irregular</button>\
+				<div id="content2"></div>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>RR inerval regularity</p>\
+				<button onclick="highlightBtn(this, \'btn2\');showContent2(\'select1\')">regular</button>\
+				<button onclick="highlightBtn(this, \'btn2\');showContent2(\'select2\')">irregular</button>\
+				<button onclick="highlightBtn(this, \'btn2\');showContent2(\'select3\')">intermittent premature contraction</button>\
+				<div id="content2"></div>';
+			} else if (selectedOption === 'select3') {
+				contentElement.innerHTML = '\
+				<p>QRS complexs shape</p>\
+				<button onclick="highlightBtn(this, \'btn2\');showContent3(\'select1\')">narrow QRS complexs</button>\
+				<button onclick="highlightBtn(this, \'btn2\');showContent3(\'select2\')">wide QRS complexs, monomorphic</button>\
+				<button onclick="highlightBtn(this, \'btn2\');showContent3(\'select3\')">wide QRS complexs, polymorphic</button>\
+				<div id="content2"></div>';
+			}
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent1(selectedOption) {
+			var contentElement = document.getElementById('content2');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>P wave shape</p>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent11(\'select1\')">normal</button>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent11(\'select2\')">absence</button>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent11(\'select3\')">flutter or fibrillatory</button>\
+				<div id="content3"></div>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>P wave shape</p>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent12(\'select1\')">regular</button>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent12(\'select2\')">intermittent, slowly P</button>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent12(\'select3\')">flutter/fribrillation</button>\
+				<div id="content3"></div>';
+			}
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent11(selectedOption) {//Bradycardia-regular
+			var contentElement = document.getElementById('content3');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>P-QRS contraction ratio</p>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent111(\'select1\')">1:1conduction</button>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent111(\'select2\')">2:1conduction</button>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent111(\'select3\')">absence</button>\
+				<div id="content4"></div>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>result : Juctional bradycardia</p>';
+			} else if (selectedOption === 'select3') {
+				contentElement.innerHTML = '\
+				<p>result : Atrial flutter(fibrillation) or complete AV block</p>';
+			}
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent111(selectedOption){//Bradycardia-regular-normal
+			var contentElement = document.getElementById('content4');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>result : Sinus bradycardia</p>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>result : 2:1 AV block</p>';
+			} else if (selectedOption === 'select3') {
+				contentElement.innerHTML = '\
+				<p>result : Complete AV block</p>';
+			}
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent12(selectedOption) {//Bradycardia-irregular
+			var contentElement = document.getElementById('content3');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>P-QRS relationship of conduction</p>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent121(\'select1\')">intermittent conduction, progressive increase in PR interbal before blocking occurs</button>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent121(\'select2\')">intermittent conduction, regular PR interval before</button>\
+				<div id="content4"></div>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>P-QRS relationship of conduction</p>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent122(\'select1\')">1:1 conduction</button>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent122(\'select2\')">frequency of QRS more than P wave</button>\
+				<div id="content4"></div>';
+			} else if (selectedOption === 'select3') {
+				contentElement.innerHTML = '\
+				<p>result : Atrial flutter(fibrillation) and slow ventricular response</p>';
+			}
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent121(selectedOption) {//Bradycardia-irregular-regular presence
+			var contentElement = document.getElementById('content4');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>result : Second degree, Mobitz type I AV block</p>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>result : Second degree, Mobitz type II AV block</p>';
+			}
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent122(selectedOption) {//Bradycardia-irregular-intermittent, slowly P
+			var contentElement = document.getElementById('content4');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>result : Sinus bradycardia</p>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>result : Sinus bradycardia, Juctional thythm</p>';
+			}
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent2(selectedOption) {	//normal
+			var contentElement = document.getElementById('content2');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>P wave shape</p>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent21(\'select1\')">normal</button>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent21(\'select2\')">abnormal</button>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent21(\'select3\')">absence</button>\
+				<div id="content3"></div>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>P wave shape</p>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent22(\'select1\')">normal</button>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent22(\'select2\')">abnormal</button>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent22(\'select3\')">flutter</button>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent22(\'select4\')">absence or fibrillation</button>\
+				<div id="content3"></div>';
+			} else if (selectedOption === 'select3') {
+				contentElement.innerHTML = '\
+				<p>QRS interval in premature contraction</p>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent23(\'select1\')">wide QRS complexs</button>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent23(\'select2\')">narrow QRS complexs</button>\
+				<div id="content3"></div>';
+			}
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent21(selectedOption) {//normal-regular
+			var contentElement = document.getElementById('content3');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>P-QRS relationship of conduction</p>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent211(\'select1\')">1:1 conduction</button>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent211(\'select2\')">unrelated</button>\
+				<div id="content4"></div>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>result : Ectopic atrial rhythm</p>';
+			} else if (selectedOption === 'select3') {
+				contentElement.innerHTML = '\
+				<p>result : Junction rhythm</p>';
+			}
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent211(selectedOption) {//normal-regular-normal
+			var contentElement = document.getElementById('content4');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>result : Sinus rhythm</p>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>result : Complete AV block</p>';
+			}
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent22(selectedOption) {//normal-irregular
+			var contentElement = document.getElementById('content3');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>P-QRS relationship of conduction</p>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent221(\'select1\')">1:1 conduction</button>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent221(\'select2\')">intermittent conduction, pregressive increase in PR interval before blocking occurs</button>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent221(\'select3\')">intermittent conduction, regular PR interval before</button>\
+				<div id="content4"></div>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>result : Ectopic atrial rhythm</p>';
+			} else if (selectedOption === 'select3') {
+				contentElement.innerHTML = '\
+				<p>result : Atrial flutter</p>';
+			} else if (selectedOption === 'select4') {
+				contentElement.innerHTML = '\
+				<p>result : Atrial fibrillation</p>';
+			}
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent221(selectedOption) {//normal-irregular-normal
+			var contentElement = document.getElementById('content4');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>result : Sinut arrythmia</p>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>result : Second degree, Mobitz type I AV block</p>';
+			} else if (selectedOption === 'select3') {
+				contentElement.innerHTML = '\
+				<p>result : Second degree, Mobitz type II AV block</p>';
+			}
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent23(selectedOption) {//normal-intermittent premature contraction
+			var contentElement = document.getElementById('content3');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>result : Ventricular premature contraction</p>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>result : Atrial premayture contraction</p>';
+			}
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent3(selectedOption) {//Tachycardia
+			var contentElement = document.getElementById('content2');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>PR interval regularity</p>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent31(\'select1\')">regular</button>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent31(\'select2\')">irregular</button>\
+				<div id="content3"></div>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>PR interval regularity</p>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent32(\'select1\')">regular</button>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent32(\'select2\')">irregular</button>\
+				<div id="content3"></div>';
+			} else if (selectedOption === 'select3') {
+				contentElement.innerHTML = '\
+				<p>Heart rate</p>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent33(\'select1\')">presence</button>\
+				<button onclick="highlightBtn(this, \'btn3\');showContent33(\'select2\')">absence</button>\
+				<div id="content3"></div>';
+			}
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent31(selectedOption) {//Tachycardia-narrow QRS complexs
+			var contentElement = document.getElementById('content3');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>P wave shape</p>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent311(\'select1\')">normal</button>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent311(\'select2\')">abnormal</button>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent311(\'select3\')">absence</button>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent311(\'select4\')">flutter</button>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent311(\'select5\')">fibrillation</button>\
+				<div id="content4"></div>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>P wave shape</p>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent311(\'select2\')">abnormal</button>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent311(\'select4\')">flutter</button>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent311(\'select5\')">absence or fibrillation</button>\
+				<div id="content4"></div>';
+			} 
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent311(selectedOption) {//Tachycardia-narrow QRS complexs-regular tachycardia-narrow QRS complexs-irregular (같은 보기로 인해 공유)
+			var contentElement = document.getElementById('content4');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>reuslt : Sinus tachycardia</p>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>result : Atrial tachycardia</p>';
+			} else if (selectedOption === 'select3') {
+				contentElement.innerHTML = '\
+				<p>result : PSVT</p>';
+			} else if (selectedOption === 'select4') {
+				contentElement.innerHTML = '\
+				<p>result : Atrial flutter</p>';
+			} else if (selectedOption === 'select5') {
+				contentElement.innerHTML = '\
+				<p>result : atrial fibrillation</p>';
+			}
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent32(selectedOption) {//Tahycardia-wide QRS complexs, monomorphic
+			var contentElement = document.getElementById('content3');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>P-QRS relationship of conduction</p>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent321(\'select1\')">absence P, or unrelated P-QRS</button>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent321(\'select2\')">related P-QRS</button>\
+				<div id="content4"></div>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>P wave shape</p>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent322(\'select1\')">absence or fibrillation</button>\
+				<button onclick="highlightBtn(this, \'btn4\');showContent322(\'select2\')">regular P presence</button>\
+				<div id="content4"></div>';
+			} 
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent321(selectedOption) {//Tachycardia-wide QRS complexs, monomorphic-regular
+			var contentElement = document.getElementById('content4');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>result : Ventricular tachycardia</p>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>result : PSVT</p>';
+			}
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent322(selectedOption) {//Tachycardia-wide QRS complexs, monomorphic-irregular
+			var contentElement = document.getElementById('content4');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>result : Atrial fibrillation</p>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>result : PSVT</p>';
+			}
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+
+		function showContent33(selectedOption) {//Tachycardia-wide QRS complexs, polymorphic
+			var contentElement = document.getElementById('content3');
+
+			if (selectedOption === 'select1') {
+				contentElement.innerHTML = '\
+				<p>result : Multifocal ventricular tachycardia or WPW syndrome with atrial fibrillation</p>';
+			} else if (selectedOption === 'select2') {
+				contentElement.innerHTML = '\
+				<p>resullt : ventricular fibrillation or </br>Torsades de pointes</p>';
+			} 
+			contentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}
+	</script>
+</head>
+
+<body>
+	<div id="divresult">ECG interpretation page</div>
+	<p>Heart Rate</p>
+	<button onclick="highlightBtn(this, 'btn1');showContent('select1')">bradycaria (&lt;60bpm)</button>
+	<button onclick="highlightBtn(this, 'btn1');showContent('select2')">normal rate (60~100bpm)</button>
+	<button onclick="highlightBtn(this, 'btn1');showContent('select3')">Tacycardia (&gt;100bpm)</button>
+	<div id="content1"></div>
+</body>
+
+</html>
